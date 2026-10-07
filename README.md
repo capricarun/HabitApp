@@ -1,3 +1,36 @@
+# Submission Details
+
+## Application & Deployment
+
+- **Application URL:** TBD — will be updated after deployment
+- **GitOps Repository:** https://github.com/capricarun/habitapp-gitops
+- **Docker Hub:** https://hub.docker.com/r/capricarun/habit-tracker
+- **Image Tag Format:** `capricarun/habit-tracker:<git-commit-sha>`
+
+### Security Notes
+
+- GitHub authentication uses a fine-grained Personal Access Token limited to the `habitapp-gitops` repository.
+- Docker Hub authentication uses an access token rather than a password.
+- Secrets and access tokens are not committed to the Git repository.
+- Kubernetes configuration should use Kubernetes Secrets for sensitive values.
+- SSH access to EC2 is restricted to the administrator's IP address.
+
+### Rollback Method
+
+Rollback is performed through GitOps by reverting the application image tag in the `habitapp-gitops` repository to a previously known-good image tag. Argo CD detects the Git change and synchronizes the previous application version to the Kubernetes cluster.
+
+### Build Verification
+
+- Java: 21
+- Maven: 3.9.12
+- Spring Boot: 3.3.4
+- Tests: **13 passed, 0 failures**
+- Build: **`mvn -B clean verify` — BUILD SUCCESS**
+- Artifact: `target/habit-tracker.jar`
+- JaCoCo coverage report generated successfully.
+
+---
+
 # Habit Tracker
 
 A self-contained Spring Boot REST API + dashboard for tracking daily/weekly habits and streaks.
