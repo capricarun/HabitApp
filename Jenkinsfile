@@ -136,7 +136,7 @@ for i, line in enumerate(lines):
     if line.startswith('  tag:'):
         lines[i] = '  tag: "' + os.environ['IMAGE_TAG'] + '"'
 
-path.write_text('\n'.join(lines) + '\n')
+path.write_text(chr(10).join(lines) + chr(10))
 PYTHON
                     echo "---- updated image section ----"
                     grep -A3 '^image:' "$VALUES_FILE"
