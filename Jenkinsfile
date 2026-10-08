@@ -125,11 +125,21 @@ pipeline {
                     rm -rf gitops
                     git clone --depth 1 https://$GITOPS_REPO gitops
                     cd gitops
+                    python3 - <<'PYTHON'
+from pathlib import Path
+import os
 
-                    sed -i "s|^\\(\\s*tag:\\s*\\).*|\\1\\"$IMAGE_TAG"\\"|" $VALUES_FILE
+path = Path(os.environ['VALUES_FILE'])
+lines = path.read_text().splitlines()
 
+for i, line in enumerate(lines):
+    if line.startswith('  tag:'):
+        lines[i] = '  tag: "' + os.environ['IMAGE_TAG'] + '"'
+
+path.write_text('\n'.join(lines) + '\n')
+PYTHON
                     echo "---- updated image section ----"
-                    grep -A3 '^image:' $VALUES_FILE
+                    grep -A3 '^image:' "$VALUES_FILE"
                 '''
             }
         }
